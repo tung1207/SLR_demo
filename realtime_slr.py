@@ -13,7 +13,7 @@ from PIL import Image, ImageFilter
 threshold = 60  #  BINARY threshold
 bgSubThreshold = 50
 learningRate = 0
-pred_thresh = 0.1
+pred_thresh = 0.7
 
 isBgCaptured = 0   # bool, whether the background captured
 
@@ -28,30 +28,6 @@ def removeBG(frame):
     fgmask = cv2.erode(fgmask, kernel, iterations=1)
     res = cv2.bitwise_and(frame, frame, mask=fgmask)
     return res
-
-
-def calculateFingers(res,drawing):  # -> finished bool, cnt: finger count
-    #  convexity defect
-    hull = cv2.convexHull(res, returnPoints=False)
-    if len(hull) > 3:
-        defects = cv2.convexityDefects(res, hull)
-        if type(defects) != type(None):  # avoid crashing.   (BUG not found)
-
-            cnt = 0
-            for i in range(defects.shape[0]):  # calculate the angle
-                s, e, f, d = defects[i][0]
-                start = tuple(res[s][0])
-                end = tuple(res[e][0])
-                far = tuple(res[f][0])
-                a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-                b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
-                c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
-                angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  # cosine theorem
-                if angle <= math.pi / 2:  # angle less than 90 degree, treat as fingers
-                    cnt += 1
-                    cv2.circle(drawing, far, 8, [211, 84, 0], -1)
-            return True, cnt
-    return False, 0
 
 def load_slr_model(folder,model_name):
     ''' Load Sign Language Recognition model

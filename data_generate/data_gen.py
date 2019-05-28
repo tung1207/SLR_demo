@@ -39,11 +39,13 @@ camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
 datas = []
 count = 0
 num_img = 200
-blank_image = np.zeros((336,336))
+blank_image = np.zeros((336,336))   
 temp_img = blank_image
-
+guide_path = 'images/amer_sign2.png'
 #%%
 while camera.isOpened() and count < num_img:
+    guide_img = cv2.imread(guide_path,0)
+    cv2.imshow('Character Table', guide_img)
     ret, frame = camera.read()
     # threshold = cv2.getTrackbarPos('trh1', 'trackbar')
     frame = cv2.bilateralFilter(frame, 5, 50, 100)  # smoothing filter

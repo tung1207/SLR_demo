@@ -36,7 +36,7 @@ from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
 # Neural Network config
 batch_size = 128
 num_classes = 24
-epochs = 1
+epochs = 100 
 
 # CNN Model 
 model = Sequential()
